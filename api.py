@@ -331,11 +331,16 @@ async def b_2fa(request: Request, phones: str, old_pw: str, new_pw: str):
     return {"status":"ok"}
 
 @app.get("/batch_update_2fa_local")
-async def batch_update_2fa_local(token: str, phones: str, new_pw: str):
-    """仅在本地 Redis 中更新 tg_2fa:{phone} 键，不触发任何 session 操作。"""
-    if token not in VALID_TOKENS: raise HTTPException(403)
+async def batch_update_2fa_local(request: Request, phones: str, new_pw: str):
+    """仅在本地 Redis 中更新 tg_2fa:{phone} 键，不触发任何 session 操作。
+    使用 Cookie 中的 admin_token 进行鉴权（与前端行为一致）。"""
+    if not verify_user(request):
+        raise HTTPException(403)
+
     phone_list = [p for p in phones.split(',') if p]
-    if not phone_list: return {"status": "error", "msg": "no phones"}
+    if not phone_list:
+        return {"status": "error", "msg": "no phones"}
+
     results = {}
     for p in phone_list:
         try:
