@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    env_file:
+      - ./.env
+    environment:
+      # 仅为覆盖示例（优先使用 .env）
+      REDIS_HOST: redis
+      BASE_URL: http://localhost:8000
+    volumes:
+      - ./sessions:/app/sessions
+    command:
+      [
+        "uvicorn",
+        "api:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--workers",
+        "1",
+      ]
+
+  worker:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - redis
+    env_file:
+      - ./.env
+    volumes:
+      - ./sessions:/app/sessions
+    command: ["python", "worker.py"]
+
+volumes:
+  redis_data:
