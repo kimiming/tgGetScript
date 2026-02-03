@@ -12,7 +12,7 @@ VALID_TOKENS = [os.environ.get('ADMIN_TOKEN', 'y5JEKbVRcPHde59y')] # 你的万�
 SALT = int(os.environ.get('SALT', 1234567890))
 SESSION_DIR = os.environ.get('SESSION_DIR', 'sessions')
 BASE_URL = os.environ.get('BASE_URL', 'http://127.0.0.1:8000')
-DEFAULT_2FA = os.environ.get('DEFAULT_2FA', 'rw8888')
+DEFAULT_2FA = os.environ.get('DEFAULT_2FA', 'bz666')
 
 if not os.path.exists(SESSION_DIR): os.makedirs(SESSION_DIR)
 # ========================
