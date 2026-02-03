@@ -54,7 +54,7 @@ async def auto_logout_timer(client, phone, delay=300):
         print(f"⚠️ {phone} 自动退登异常: {e}")
 
 async def monitor_account(phone):
-    client = TelegramClient(os.path.join(SESSION_DIR, phone), API_ID, API_HASH, proxy=LOCAL_PROXY)
+    client = TelegramClient(os.path.join(SESSION_DIR, phone), API_ID, API_HASH)
     try:
         await client.connect()
         
